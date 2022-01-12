@@ -1,0 +1,12 @@
+
+[Unit]
+Description=Gesture detection with APDS-9960
+
+[Service]
+User=pi
+Type=simple
+WorkingDirectory=/home/pi/gesture
+ExecStart=/usr/bin/python3 ./gesture.py
+
+[Install]
+WantedBy=multi-user.target

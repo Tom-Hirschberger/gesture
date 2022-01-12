@@ -57,6 +57,9 @@ try:
     apds.setGestureGain(APDS9960_GGAIN_4X)
     
     running = True
+    
+    #without flushed the value will not be written to the journal of the service
+    sys.stdout.flush()
 
     while running:
         if ir_flag:
@@ -66,11 +69,13 @@ try:
                 motion = apds.readGesture()
                 gesture = dirs.get(motion, "unknown")
                 print("Gesture={}".format(gesture))
+                sys.stdout.flush()
                 cur_event = cfg.gesture_events.get("default", None)
                 cur_event = cfg.gesture_events.get(gesture, cur_event)
                 
                 if not cur_event is None:
                     pprint.pprint(cur_event, indent=4)
+                    sys.stdout.flush()
                     if not cur_event.get("url", None) is None:
                         if cur_event.get("type", "GET") is "GET":
                             try:
@@ -84,6 +89,7 @@ try:
                                 pass
                         else:
                             print("Unknown type %s" %cur_event.get("type", None))
+                            sys.stdout.flush()
             GPIO.add_event_detect(7, GPIO.FALLING, callback = intH)
         sleep(cfg.time_between_check)
 
@@ -91,3 +97,4 @@ try:
 finally:
     GPIO.cleanup()
     print("Bye")
+    sys.stdout.flush()
